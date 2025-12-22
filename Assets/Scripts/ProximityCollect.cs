@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class ProximityCollect : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class ProximityCollect : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI uiText;
+
+    public Animator animator;
 
     private bool isPlayerInRange = false;
     private bool isHeld = false;
@@ -27,9 +30,13 @@ public class ProximityCollect : MonoBehaviour
         {
             if (carrier != null && carrier.CanPickup(this))
             {
+                animator.SetTrigger("isGrab");
+                StartCoroutine(WaitForAnimation());
+
                 if (uiText != null) uiText.text = "";
                 carrier.Pickup(this);
             }
+
             else
             {
                 if (uiText != null) uiText.text = "Hands full (press G to drop)";
@@ -67,5 +74,10 @@ public class ProximityCollect : MonoBehaviour
         isHeld = held;
         isPlayerInRange = false;
         if (uiText != null) uiText.text = "";
+    }
+
+    IEnumerator WaitForAnimation()
+    {
+        yield return new WaitForSeconds(1.5f);
     }
 }

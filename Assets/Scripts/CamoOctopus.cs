@@ -45,7 +45,7 @@ public class CamoOctopus : MonoBehaviour
     {
         isBusy = true;
         isCamouflaged = true;
-        animator.SetTrigger("isCamo");
+        //animator.SetTrigger("isCamo");
         targetRenderer.materials = camoMaterials;
 
         float startAlpha = 1f;

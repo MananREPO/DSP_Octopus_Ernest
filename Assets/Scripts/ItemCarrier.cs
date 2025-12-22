@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class ItemCarrier : MonoBehaviour
 {
+    public Animator animator;
+
     [Header("Hold Settings")]
     [SerializeField] Transform holdPoint;
     [SerializeField] KeyCode dropKey = KeyCode.G;
@@ -79,6 +81,7 @@ public class ItemCarrier : MonoBehaviour
         item.transform.SetParent(null);
         item.SetHeld(false);
 
+        animator.SetTrigger("isThrow");
         StartCoroutine(ReenableCollidersAndPhysics(item, rb, cols));
     }
 
