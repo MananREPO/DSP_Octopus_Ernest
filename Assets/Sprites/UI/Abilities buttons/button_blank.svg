@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 110 110">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3 {
+        fill: none;
+      }
+
+      .cls-4 {
+        fill: url(#linear-gradient-4);
+      }
+
+      .cls-5 {
+        fill: url(#linear-gradient-5);
+      }
+
+      .cls-2 {
+        stroke: url(#linear-gradient-2);
+      }
+
+      .cls-2, .cls-6, .cls-3 {
+        stroke-miterlimit: 10;
+        stroke-width: 6px;
+      }
+
+      .cls-6 {
+        fill: #1578a3;
+        stroke: url(#linear-gradient);
+      }
+
+      .cls-3 {
+        stroke: url(#linear-gradient-3);
+      }
+
+      .cls-7 {
+        clip-path: url(#clippath);
+      }
+    </style>
+    <clipPath id="clippath">
+      <rect class="cls-1" x="-603.19" y="-1160.94" width="1920" height="1080"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" x1="55" y1="110" x2="55" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0a4b7a"/>
+      <stop offset="1" stop-color="#1578a3"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="55" y1="6.95" x2="55" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1578a3"/>
+      <stop offset="1" stop-color="#38a4c2"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-3" x1="55" y1="110" x2="55" y2="103.05" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#06335e"/>
+      <stop offset="1" stop-color="#0a4b7a"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-4" x1="55" y1="104" x2="55" y2="6" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0a4b7a"/>
+      <stop offset="1" stop-color="#1578a3"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-5" x1="55" y1="106" x2="55" y2="4" xlink:href="#linear-gradient-3"/>
+  </defs>
+  <g class="cls-7">
+    <image width="1536" height="1024" transform="translate(-603.18 -1271.45) scale(1.25)" xlink:href="../Underwater Serenity with Octopuses and Coral.jpg"/>
+  </g>
+  <g>
+    <rect class="cls-6" x="3" y="3" width="104" height="104" rx="6.25" ry="6.25"/>
+    <path class="cls-2" d="M4.83,4.83c1.12-1.13,2.68-1.83,4.41-1.83h91.51c1.72,0,3.29.7,4.42,1.83"/>
+    <path class="cls-3" d="M105.17,105.17c-1.12,1.13-2.68,1.83-4.41,1.83H9.25c-1.72,0-3.29-.7-4.42-1.83"/>
+    <g>
+      <rect class="cls-4" x="6" y="6" width="98" height="98" rx="3.56" ry="3.56"/>
+      <path class="cls-5" d="M100.44,6c1.97,0,3.56,1.6,3.56,3.56v90.87c0,1.97-1.59,3.56-3.56,3.56H9.56c-1.97,0-3.56-1.6-3.56-3.56V9.56c0-1.97,1.6-3.56,3.56-3.56h90.87M100.44,4H9.56c-3.07,0-5.56,2.5-5.56,5.56v90.87c0,3.07,2.5,5.56,5.56,5.56h90.87c3.07,0,5.56-2.5,5.56-5.56V9.56c0-3.07-2.5-5.56-5.56-5.56h0Z"/>
+    </g>
+  </g>
+</svg>

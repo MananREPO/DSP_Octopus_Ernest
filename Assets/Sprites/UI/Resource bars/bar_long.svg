@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 520.03 45.33">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#linear-gradient-4);
+      }
+
+      .cls-2 {
+        stroke: url(#linear-gradient-2);
+      }
+
+      .cls-2, .cls-3, .cls-4 {
+        fill: none;
+        stroke-miterlimit: 10;
+        stroke-width: 6px;
+      }
+
+      .cls-3 {
+        stroke: url(#linear-gradient-3);
+      }
+
+      .cls-4 {
+        stroke: url(#linear-gradient);
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="260.02" y1="45.29" x2="260.02" y2=".04" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0a4b7a"/>
+      <stop offset="1" stop-color="#1578a3"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="260.01" y1="6.99" x2="260.01" y2=".04" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1578a3"/>
+      <stop offset="1" stop-color="#38a4c2"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-3" x1="260.02" y1="45.29" x2="260.02" y2="38.34" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#06335e"/>
+      <stop offset="1" stop-color="#0a4b7a"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-4" x1="260.02" y1="41.29" x2="260.02" y2="4.04" xlink:href="#linear-gradient-3"/>
+  </defs>
+  <rect class="cls-4" x="3.02" y="3.04" width="514" height="39.25" rx="6.25" ry="6.25"/>
+  <path class="cls-2" d="M4.85,4.87c1.12-1.13,2.68-1.83,4.41-1.83h501.51c1.72,0,3.29.7,4.42,1.83"/>
+  <path class="cls-3" d="M515.19,40.46c-1.12,1.13-2.68,1.83-4.41,1.83H9.27c-1.72,0-3.29-.7-4.42-1.83"/>
+  <path class="cls-1" d="M510.45,6.04c1.97,0,3.56,1.6,3.56,3.56v26.13c0,1.97-1.59,3.56-3.56,3.56H9.58c-1.97,0-3.56-1.6-3.56-3.56V9.6c0-1.97,1.59-3.56,3.56-3.56h500.88M510.45,4.04H9.58c-3.07,0-5.56,2.5-5.56,5.56v26.13c0,3.07,2.5,5.56,5.56,5.56h500.88c3.07,0,5.56-2.5,5.56-5.56V9.6c0-3.07-2.5-5.56-5.56-5.56h0Z"/>
+</svg>
