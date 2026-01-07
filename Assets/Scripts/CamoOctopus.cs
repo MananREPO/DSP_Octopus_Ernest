@@ -1,5 +1,6 @@
-using UnityEngine;
+using System;
 using System.Collections;
+using UnityEngine;
 
 public class CamoOctopus : MonoBehaviour
 {
@@ -18,6 +19,9 @@ public class CamoOctopus : MonoBehaviour
     private Color[] camoBaseColors;
 
     public Animator animator;
+
+    public bool IsCamouflaged => isCamouflaged;
+    public event Action<bool> OnCamoChanged;
 
     void Start()
     {
@@ -45,8 +49,10 @@ public class CamoOctopus : MonoBehaviour
     {
         isBusy = true;
         isCamouflaged = true;
+        OnCamoChanged?.Invoke(true);
         //animator.SetTrigger("isCamo");
         targetRenderer.materials = camoMaterials;
+
 
         float startAlpha = 1f;
         float endAlpha = 0.2f;
@@ -95,6 +101,7 @@ public class CamoOctopus : MonoBehaviour
         targetRenderer.materials = originalMaterials;
 
         isCamouflaged = false;
+        OnCamoChanged?.Invoke(false);
         isBusy = false;
     }
 }
