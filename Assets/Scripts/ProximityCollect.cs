@@ -30,7 +30,8 @@ public class ProximityCollect : MonoBehaviour
         {
             if (carrier != null && carrier.CanPickup(this))
             {
-                animator.SetTrigger("isGrab");
+                //animator.SetTrigger("isGrab");
+                animator.SetBool("isGrabbing", true);
                 StartCoroutine(WaitForAnimation());
 
                 if (uiText != null) uiText.text = "";

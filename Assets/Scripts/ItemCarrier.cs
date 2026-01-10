@@ -81,7 +81,9 @@ public class ItemCarrier : MonoBehaviour
         item.transform.SetParent(null);
         item.SetHeld(false);
 
-        animator.SetTrigger("isThrow");
+        //animator.SetTrigger("isThrow");
+        animator.SetBool("isThrowing", true);
+
         StartCoroutine(ReenableCollidersAndPhysics(item, rb, cols));
     }
 

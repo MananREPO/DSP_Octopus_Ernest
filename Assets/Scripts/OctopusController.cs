@@ -59,12 +59,17 @@ public class OctopusController : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.W))
             {
-                animator.SetTrigger("isSwim");
+                //animator.SetTrigger("isSwim");
+                animator.SetBool("isSwimming", true);
+                animator.SetBool("isIdleing", false);
             }
 
             if (Input.GetKeyUp(KeyCode.W))
             {
-                animator.SetTrigger("isIdle");
+                //animator.SetTrigger("isIdle");
+                animator.SetBool("isSwimming", false);
+                animator.SetBool("isIdleing", true);
+
             }
         }
 
@@ -94,7 +99,9 @@ public class OctopusController : MonoBehaviour
 
     IEnumerator PerformDash()
     {
-        animator.SetTrigger("isDash");
+        //animator.SetTrigger("isDash");
+        animator.SetBool("isDashing", true);
+        animator.SetBool("isSwimming", false);
         yield return new WaitForSeconds(1.3f);
         isDashing = true;
         lastDashTime = Time.time;
@@ -105,7 +112,10 @@ public class OctopusController : MonoBehaviour
         if (dashBubbles != null) dashBubbles.SetEmitting(false);
         isDashing = false;
         yield return new WaitForSeconds(0.2f);
-        animator.SetTrigger("isSwim");
+        animator.SetBool("isDashing", false);
+        animator.SetBool("isSwimming", true);
+        //animator.SetTrigger("isSwim");
+
     }
 
     void OnCollisionEnter(Collision collision)
