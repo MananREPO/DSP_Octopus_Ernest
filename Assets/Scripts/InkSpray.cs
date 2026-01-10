@@ -76,7 +76,7 @@ public class InkSpray : MonoBehaviour
         }
 
         OnInkSprayed?.Invoke(pos);
-        shark?.NotifyInk(pos);
+        shark?.NotifyInk(ink.transform);
 
         Destroy(ink.gameObject, GetParticleLifetime(ink) + 0.5f);
     }

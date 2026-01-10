@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class SharkAI : MonoBehaviour
 {
-    private enum State { Patrol, Hunt }
+    private enum State { Patrol, Hunt, InkAttack }
 
     [Header("References")]
     [SerializeField] private SharkPath path;
@@ -32,31 +32,17 @@ public class SharkAI : MonoBehaviour
     [SerializeField] private float huntTurnBoostDuration = 0.35f;
 
     [Header("Ink Reaction")]
-    [SerializeField] private float inkConfuseSeconds = 2.5f;
-    [SerializeField] private float inkInvestigateSeconds = 3.5f;
-    [SerializeField] private float inkHearingRadius = 25f;
+    [SerializeField] private float inkAttackSeconds = 3.5f;
+    [SerializeField] private float inkAttackReachDist = 1.2f;
 
     [Header("Kill On Touch")]
     [SerializeField] private bool killOnTouch = true;
     [SerializeField] private string playerTag = "Player";
 
-    [SerializeField] private float inkDepthMin = 3f;
-    [SerializeField] private float inkDepthMax = 5f;
-    [SerializeField] private float inkHoldRadius = 0.75f;
-    [SerializeField] private float inkMoveSpeed = 8f;
-
-    private float inkLockUntil;
-    private Vector3 inkLockPos;
-
-
     private State state = State.Patrol;
 
     private Transform targetPlayer;
     private int wpIndex;
-
-    private float confusedUntil;
-    private float investigateUntil;
-    private Vector3 investigatePos;
 
     private float huntStartTime;
     private float baseHuntSpeed;
@@ -64,6 +50,9 @@ public class SharkAI : MonoBehaviour
 
     private CamoOctopus camo;
     private static FieldInfo camoField;
+
+    private Transform inkTarget;
+    private float inkTargetUntil;
 
     private void Reset()
     {
@@ -98,26 +87,35 @@ public class SharkAI : MonoBehaviour
     {
         if (rb == null) return;
 
-        bool isCamo = GetCamoState();
-
-        if (Time.time < inkLockUntil)
+        if (inkTarget != null && Time.time < inkTargetUntil)
         {
-            float d = Vector3.Distance(rb.position, inkLockPos);
-            if (d > inkHoldRadius)
-                MoveTowards(inkLockPos, inkMoveSpeed, true);
+            state = State.InkAttack;
+
+            float d = Vector3.Distance(rb.position, inkTarget.position);
+            if (d > inkAttackReachDist)
+            {
+                MoveTowards(inkTarget.position, huntSpeed, huntUseVertical);
+            }
+            else
+            {
+                MoveTowards(inkTarget.position, patrolSpeed, false);
+            }
 
             return;
         }
-        else if (inkLockUntil > 0f)
+
+        if (state == State.InkAttack)
         {
-            inkLockUntil = 0f;
-            huntStartTime = Time.time;
+            inkTarget = null;
+            inkTargetUntil = 0f;
+            state = State.Patrol;
         }
+
+        bool isCamo = GetCamoState();
 
         if (targetPlayer != null && isCamo)
         {
             state = State.Patrol;
-            confusedUntil = 0f;
         }
         else if (targetPlayer != null)
         {
@@ -128,20 +126,14 @@ public class SharkAI : MonoBehaviour
             state = State.Patrol;
         }
 
-        if (Time.time < confusedUntil)
-        {
-            if (Time.time < investigateUntil)
-                MoveTowards(investigatePos, patrolSpeed, false);
-            return;
-        }
-
         if (state == State.Hunt) HuntMove();
         else PatrolMove();
     }
 
-
     public void BeginHunt(Transform player)
     {
+        if (inkTarget != null && Time.time < inkTargetUntil) return;
+
         targetPlayer = player;
         camo = player != null ? player.GetComponentInChildren<CamoOctopus>() : null;
 
@@ -159,29 +151,25 @@ public class SharkAI : MonoBehaviour
         targetPlayer = null;
         camo = null;
 
-        confusedUntil = 0f;
-        investigateUntil = 0f;
-
         turnSpeed = baseTurnSpeed;
         CancelInvoke(nameof(ResetTurnSpeed));
 
         state = State.Patrol;
     }
 
-    public void NotifyInk(Vector3 playerPos)
+    public void NotifyInk(Transform inkCloud)
     {
-        float depth = Random.Range(inkDepthMin, inkDepthMax);
+        if (inkCloud == null) return;
+        if (state != State.Hunt || targetPlayer == null) return;
 
-        inkLockPos = playerPos + Vector3.down * depth;
-        inkLockUntil = Time.time + inkInvestigateSeconds;
+        targetPlayer = null;
+        camo = null;
 
-        confusedUntil = Time.time + inkConfuseSeconds;
-        investigateUntil = inkLockUntil;
-        investigatePos = inkLockPos;
+        inkTarget = inkCloud;
+        inkTargetUntil = Time.time + inkAttackSeconds;
 
-        state = State.Patrol;
+        state = State.InkAttack;
     }
-
 
     private void ResetTurnSpeed()
     {
@@ -201,12 +189,6 @@ public class SharkAI : MonoBehaviour
 
     private void PatrolMove()
     {
-        if (Time.time < investigateUntil)
-        {
-            MoveTowards(investigatePos, patrolSpeed, false);
-            return;
-        }
-
         if (path == null || path.Waypoints == null || path.Waypoints.Length < 2) return;
 
         int len = path.Waypoints.Length;
