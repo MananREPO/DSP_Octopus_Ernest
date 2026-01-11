@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 110 110">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill: #fff;
+      }
+
+      .cls-3, .cls-4, .cls-5 {
+        fill: none;
+      }
+
+      .cls-6 {
+        fill: url(#linear-gradient-4);
+      }
+
+      .cls-7 {
+        fill: url(#linear-gradient-5);
+      }
+
+      .cls-4 {
+        stroke: url(#linear-gradient-2);
+      }
+
+      .cls-4, .cls-8, .cls-5 {
+        stroke-miterlimit: 10;
+        stroke-width: 6px;
+      }
+
+      .cls-8 {
+        fill: #1578a3;
+        stroke: url(#linear-gradient);
+      }
+
+      .cls-5 {
+        stroke: url(#linear-gradient-3);
+      }
+
+      .cls-2 {
+        font-family: Coiny-Regular, Coiny;
+        font-size: 24px;
+      }
+
+      .cls-9 {
+        clip-path: url(#clippath);
+      }
+    </style>
+    <clipPath id="clippath">
+      <rect class="cls-3" y="-1160.94" width="1920" height="1080"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" x1="55" y1="110" x2="55" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0a4b7a"/>
+      <stop offset="1" stop-color="#1578a3"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="55" y1="6.95" x2="55" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1578a3"/>
+      <stop offset="1" stop-color="#38a4c2"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-3" x1="55" y1="110" x2="55" y2="103.05" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#06335e"/>
+      <stop offset="1" stop-color="#0a4b7a"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-4" x1="55" y1="104" x2="55" y2="6" xlink:href="#linear-gradient-2"/>
+    <linearGradient id="linear-gradient-5" x1="55" y1="106" x2="55" y2="4" xlink:href="#linear-gradient-3"/>
+  </defs>
+  <g class="cls-9">
+    <image width="1536" height="1024" transform="translate(.01 -1271.45) scale(1.25)" xlink:href="../Underwater Serenity with Octopuses and Coral.jpg"/>
+  </g>
+  <g>
+    <g>
+      <rect class="cls-8" x="3" y="3" width="104" height="104" rx="6.25" ry="6.25"/>
+      <path class="cls-4" d="M4.83,4.83c1.12-1.13,2.68-1.83,4.41-1.83h91.51c1.72,0,3.29.7,4.42,1.83"/>
+      <path class="cls-5" d="M105.17,105.17c-1.12,1.13-2.68,1.83-4.41,1.83H9.25c-1.72,0-3.29-.7-4.42-1.83"/>
+      <g>
+        <rect class="cls-6" x="6" y="6" width="98" height="98" rx="3.56" ry="3.56"/>
+        <path class="cls-7" d="M100.44,6c1.97,0,3.56,1.6,3.56,3.56v90.87c0,1.97-1.59,3.56-3.56,3.56H9.56c-1.97,0-3.56-1.6-3.56-3.56V9.56c0-1.97,1.6-3.56,3.56-3.56h90.87M100.44,4H9.56c-3.07,0-5.56,2.5-5.56,5.56v90.87c0,3.07,2.5,5.56,5.56,5.56h90.87c3.07,0,5.56-2.5,5.56-5.56V9.56c0-3.07-2.5-5.56-5.56-5.56h0Z"/>
+      </g>
+    </g>
+    <g>
+      <path class="cls-1" d="M78.31,44.34c-3.48,0-6.95.77-10.08,2.22-.83.39-2.05.78-3.18.4-1.89-.63-7.56-5.18-13.17-6.99-5.23-1.69-8.65-7.56-10.57-5.65-1.04,1.05.93,4.32,2.94,6.74,2.22,2.66,6.31,4.05,7.38,4.6-.51,0-4.99,1.2-10.52-.23-3.98-1.02-8.33-3.79-9.22-1.74-1.03,2.35,2.1,5.11,6.26,7.09,2.9,1.38,7.92,2.27,10.7,3.21.71.24,1.55.73,2.03,1.01-.47.28-1.31.77-2.03,1.01-2.78.94-7.8,1.83-10.7,3.21-4.16,1.98-7.29,4.74-6.26,7.09.89,2.04,5.24-.72,9.22-1.74,5.53-1.43,10.01-.23,10.52-.23-1.08.55-5.16,1.93-7.38,4.59-2.01,2.43-3.98,5.7-2.94,6.74,1.92,1.92,5.34-3.96,10.57-5.64,5.6-1.81,11.28-6.36,13.17-6.99,1.12-.37,2.35,0,3.18.39,3.13,1.46,6.61,2.23,10.08,2.23,9.09,0,16.49-4.79,16.49-10.67s-7.4-10.67-16.49-10.67ZM76.42,50.02c1.11,0,1.68.63,1.68,1.41s-.55,1.41-1.68,1.41-1.59-.63-1.59-1.41.47-1.41,1.59-1.41ZM76.42,59.99c-1.1,0-1.59-.64-1.59-1.41s.54-1.41,1.59-1.41,1.68.63,1.68,1.41-.47,1.41-1.68,1.41Z"/>
+      <path class="cls-1" d="M38.91,35.56c-3.36.54-6.72.52-10.1.35-3.3-.19-6.99-.02-10.1-.45,3.37-.14,6.73-.26,10.1-.35,3.3-.08,7.01-.36,10.1.45h0Z"/>
+      <path class="cls-1" d="M41.97,55.06c-3.87.54-7.74.52-11.63.35-3.81-.19-8.01-.02-11.63-.45,3.88-.14,7.75-.26,11.63-.35,3.81-.08,8.03-.36,11.63.45h0Z"/>
+      <path class="cls-1" d="M38.91,74.96c-3.36.54-6.72.52-10.1.35-3.3-.19-6.99-.02-10.1-.45,3.37-.14,6.73-.26,10.1-.35,3.3-.09,7.01-.36,10.1.45h0Z"/>
+      <path class="cls-1" d="M30.5,65.23c-2.54.54-5.08.52-7.65.35-2.55-.09-5.1-.21-7.65-.35,0,0,0-.1,0-.1,2.55-.14,5.1-.26,7.65-.35,2.49-.09,5.38-.35,7.65.45h0Z"/>
+      <path class="cls-1" d="M30.5,44.9c-2.54.54-5.08.52-7.65.35-2.55-.09-5.1-.21-7.65-.35v-.1c2.55-.14,5.1-.26,7.65-.35,2.49-.09,5.38-.35,7.65.45h0Z"/>
+    </g>
+    <text class="cls-2" transform="translate(89.02 27.66)"><tspan x="0" y="0">1</tspan></text>
+  </g>
+</svg>
