@@ -102,7 +102,7 @@ public class OctopusController : MonoBehaviour
         //animator.SetTrigger("isDash");
         animator.SetBool("isDashing", true);
         animator.SetBool("isSwimming", false);
-        yield return new WaitForSeconds(1.3f);
+        yield return new WaitForSeconds(0.75f);
         isDashing = true;
         lastDashTime = Time.time;
         if (dashBubbles != null) dashBubbles.SetEmitting(true);
