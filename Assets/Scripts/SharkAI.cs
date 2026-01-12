@@ -35,6 +35,10 @@ public class SharkAI : MonoBehaviour
     [Header("Ink Reaction")]
     [SerializeField] private float inkAttackSeconds = 3.5f;
     [SerializeField] private float inkAttackReachDist = 1.2f;
+    [SerializeField] private float inkConfusedTime = 3f;
+    private float inkConfusedUntil;
+    private Vector3 inkConfusedPosition;
+    private Transform rememberedPlayer;
 
     [Header("Kill On Touch")]
     [SerializeField] private bool killOnTouch = true;
@@ -90,18 +94,43 @@ public class SharkAI : MonoBehaviour
     {
         if (rb == null || state == State.Eating) return;
 
+        if (Time.time < inkConfusedUntil)
+        {
+            MoveTowards(inkConfusedPosition, patrolSpeed, false);
+            return;
+        }
+
+        if (inkConfusedUntil > 0f && Time.time >= inkConfusedUntil)
+        {
+            inkConfusedUntil = 0f;
+
+            if (activeSafeZones.Count == 0 && rememberedPlayer != null)
+            {
+                BeginHunt(rememberedPlayer);
+            }
+        }
+
         if (inkTarget != null && Time.time < inkTargetUntil)
         {
             state = State.InkAttack;
 
             float d = Vector3.Distance(rb.position, inkTarget.position);
+
             if (d > inkAttackReachDist)
             {
                 MoveTowards(inkTarget.position, huntSpeed, huntUseVertical);
             }
             else
             {
-                MoveTowards(inkTarget.position, patrolSpeed, false);
+                inkConfusedPosition = inkTarget.position;
+                inkConfusedUntil = Time.time + inkConfusedTime;
+
+                inkTarget = null;
+                inkTargetUntil = 0f;
+
+                if (animator != null) animator.SetBool("isFast", false);
+
+                state = State.Patrol;
             }
 
             return;
@@ -111,6 +140,12 @@ public class SharkAI : MonoBehaviour
         {
             inkTarget = null;
             inkTargetUntil = 0f;
+
+            inkConfusedPosition = rb.position;
+            inkConfusedUntil = Time.time + inkConfusedTime;
+
+            if (animator != null) animator.SetBool("isFast", false);
+
             state = State.Patrol;
         }
 
@@ -139,6 +174,7 @@ public class SharkAI : MonoBehaviour
         if (inkTarget != null && Time.time < inkTargetUntil) return;
         animator.SetBool("isFast", true);
         targetPlayer = player;
+        rememberedPlayer = player;
         camo = player != null ? player.GetComponentInChildren<CamoOctopus>() : null;
 
         huntStartTime = Time.time;
@@ -164,7 +200,10 @@ public class SharkAI : MonoBehaviour
     public void NotifyInk(Transform inkCloud)
     {
         if (inkCloud == null) return;
+
         if (state != State.Hunt || targetPlayer == null) return;
+
+        rememberedPlayer = targetPlayer;
 
         targetPlayer = null;
         camo = null;
