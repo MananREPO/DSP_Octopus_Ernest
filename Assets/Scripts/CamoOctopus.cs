@@ -23,6 +23,9 @@ public class CamoOctopus : MonoBehaviour
     public bool IsCamouflaged => isCamouflaged;
     public event Action<bool> OnCamoChanged;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip camoSFX;
+
     void Start()
     {
         targetRenderer = GetComponentInChildren<Renderer>();
@@ -50,6 +53,10 @@ public class CamoOctopus : MonoBehaviour
         isBusy = true;
         isCamouflaged = true;
         OnCamoChanged?.Invoke(true);
+        if (camoSFX != null && AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(camoSFX, 0.7f);
+        }
         //animator.SetTrigger("isCamo");
         targetRenderer.materials = camoMaterials;
 

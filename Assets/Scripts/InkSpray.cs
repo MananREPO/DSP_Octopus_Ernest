@@ -18,6 +18,9 @@ public class InkSpray : MonoBehaviour
 
     private SharkAI shark;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip inkSFX;
+
     private void Awake()
     {
         shark = FindFirstObjectByType<SharkAI>();
@@ -38,6 +41,10 @@ public class InkSpray : MonoBehaviour
         {
             Debug.LogWarning("InkSpray: Missing ink prefab reference.");
             return;
+        }
+        if (inkSFX != null && AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(inkSFX, 0.9f);
         }
 
         Transform root = transform.root;

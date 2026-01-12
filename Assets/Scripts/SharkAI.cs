@@ -146,7 +146,7 @@ public class SharkAI : MonoBehaviour
         turnSpeed = baseTurnSpeed * huntTurnBoost;
         CancelInvoke(nameof(ResetTurnSpeed));
         Invoke(nameof(ResetTurnSpeed), huntTurnBoostDuration);
-
+        AudioManager.Instance?.SetChaseState(true);
         state = State.Hunt;
     }
 
@@ -157,7 +157,7 @@ public class SharkAI : MonoBehaviour
         animator.SetBool("isFast", false);
         turnSpeed = baseTurnSpeed;
         CancelInvoke(nameof(ResetTurnSpeed));
-
+        AudioManager.Instance?.SetChaseState(false);
         state = State.Patrol;
     }
 
@@ -303,7 +303,7 @@ public class SharkAI : MonoBehaviour
     private IEnumerator FinishEating(GameObject playerObj)
     {
         yield return new WaitForSeconds(2.0f);
-
+        AudioManager.Instance?.SetChaseState(false);
         if (playerObj != null) Destroy(playerObj);
 
         targetPlayer = null;

@@ -23,6 +23,8 @@ public class OctopusController : MonoBehaviour
     private Rigidbody rb;
     private bool movementLocked;
     [SerializeField] private BubbleTrailEmitter dashBubbles;
+    [Header("Audio Settings")]
+    [SerializeField] private AudioClip dashSFX;
 
     void Start()
     {
@@ -102,6 +104,10 @@ public class OctopusController : MonoBehaviour
         //animator.SetTrigger("isDash");
         animator.SetBool("isDashing", true);
         animator.SetBool("isSwimming", false);
+        if (dashSFX != null && AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(dashSFX, 0.8f);
+        }
         yield return new WaitForSeconds(0.75f);
         isDashing = true;
         lastDashTime = Time.time;
