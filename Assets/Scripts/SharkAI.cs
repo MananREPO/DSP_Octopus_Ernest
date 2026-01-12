@@ -1,9 +1,10 @@
-﻿using System.Reflection;
+﻿using System.Collections;
+using System.Reflection;
 using UnityEngine;
 
 public class SharkAI : MonoBehaviour
 {
-    private enum State { Patrol, Hunt, InkAttack }
+    private enum State { Patrol, Hunt, InkAttack, Eating }
 
     [Header("References")]
     [SerializeField] private SharkPath path;
@@ -38,9 +39,11 @@ public class SharkAI : MonoBehaviour
     [Header("Kill On Touch")]
     [SerializeField] private bool killOnTouch = true;
     [SerializeField] private string playerTag = "Player";
+    [SerializeField] private Animator animator;
+
 
     private State state = State.Patrol;
-
+    private System.Collections.Generic.HashSet<int> activeSafeZones = new System.Collections.Generic.HashSet<int>();
     private Transform targetPlayer;
     private int wpIndex;
 
@@ -85,7 +88,7 @@ public class SharkAI : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (rb == null) return;
+        if (rb == null || state == State.Eating) return;
 
         if (inkTarget != null && Time.time < inkTargetUntil)
         {
@@ -132,8 +135,9 @@ public class SharkAI : MonoBehaviour
 
     public void BeginHunt(Transform player)
     {
+        if (activeSafeZones.Count > 0) return;
         if (inkTarget != null && Time.time < inkTargetUntil) return;
-
+        animator.SetBool("isFast", true);
         targetPlayer = player;
         camo = player != null ? player.GetComponentInChildren<CamoOctopus>() : null;
 
@@ -150,7 +154,7 @@ public class SharkAI : MonoBehaviour
     {
         targetPlayer = null;
         camo = null;
-
+        animator.SetBool("isFast", false);
         turnSpeed = baseTurnSpeed;
         CancelInvoke(nameof(ResetTurnSpeed));
 
@@ -191,20 +195,17 @@ public class SharkAI : MonoBehaviour
     {
         if (path == null || path.Waypoints == null || path.Waypoints.Length < 2) return;
 
-        int len = path.Waypoints.Length;
+        Vector3 sharkPos = rb.position;
+        Vector3 wpPos = path.Waypoints[wpIndex].position;
 
-        if (FlatDistance(rb.position, path.Waypoints[wpIndex].position) <= waypointReachDist)
-            wpIndex = (wpIndex + 1) % len;
+        sharkPos.y = 0f;
+        wpPos.y = 0f;
 
-        int guard = 0;
-        while (guard < len)
+        float horizontalDist = Vector3.Distance(sharkPos, wpPos);
+
+        if (horizontalDist <= waypointReachDist)
         {
-            int next = (wpIndex + 1) % len;
-            float seg = FlatDistance(path.Waypoints[wpIndex].position, path.Waypoints[next].position);
-            if (seg >= minSegmentLength) break;
-
-            wpIndex = next;
-            guard++;
+            wpIndex = (wpIndex + 1) % path.Waypoints.Length;
         }
 
         MoveTowards(path.Waypoints[wpIndex].position, patrolSpeed, false);
@@ -215,25 +216,25 @@ public class SharkAI : MonoBehaviour
         if (rb == null) return;
 
         Vector3 pos = rb.position;
-
         Vector3 dirMove = targetPos - pos;
         if (!includeY) dirMove.y = 0f;
 
-        if (dirMove.sqrMagnitude < 0.0001f) return;
+        if (dirMove.magnitude < 0.5f) return;
 
         Vector3 dirLook = targetPos - pos;
         dirLook.y = 0f;
-        if (dirLook.sqrMagnitude < 0.0001f) dirLook = new Vector3(dirMove.x, 0f, dirMove.z);
+
+        if (dirLook.magnitude < 0.5f) dirLook = transform.forward;
 
         dirMove.Normalize();
         dirLook.Normalize();
+
 
         Quaternion desiredRot = Quaternion.LookRotation(dirLook, Vector3.up) * Quaternion.Euler(0f, modelYawOffset, 0f);
         Quaternion newRot = Quaternion.Slerp(rb.rotation, desiredRot, turnSpeed * Time.fixedDeltaTime);
         rb.MoveRotation(newRot);
 
         Vector3 delta = dirMove * (speed * Time.fixedDeltaTime);
-
         if (includeY)
             delta.y = Mathf.Clamp(delta.y, -maxVerticalSpeed * Time.fixedDeltaTime, maxVerticalSpeed * Time.fixedDeltaTime);
 
@@ -256,18 +257,15 @@ public class SharkAI : MonoBehaviour
     private int GetClosestWaypointIndex()
     {
         if (path == null || path.Waypoints == null || path.Waypoints.Length == 0) return 0;
-
         Vector3 pos = rb != null ? rb.position : transform.position;
 
         int best = 0;
         float bestD = float.MaxValue;
-
         for (int i = 0; i < path.Waypoints.Length; i++)
         {
-            float d = FlatDistance(pos, path.Waypoints[i].position);
+            float d = Vector3.Distance(pos, path.Waypoints[i].position);
             if (d < bestD) { bestD = d; best = i; }
         }
-
         return best;
     }
 
@@ -280,12 +278,44 @@ public class SharkAI : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!killOnTouch) return;
-        if (state != State.Hunt) return;
+        if (!killOnTouch || state != State.Hunt) return;
 
         Transform root = other.transform.root;
         if (!root.CompareTag(playerTag)) return;
 
-        Destroy(root.gameObject);
+        state = State.Eating;
+
+
+        if (animator != null)
+        {
+            animator.SetTrigger("Eat");
+        }
+
+
+        root.gameObject.SetActive(false);
+
+
+        StartCoroutine(FinishEating(root.gameObject));
     }
+
+
+
+    private IEnumerator FinishEating(GameObject playerObj)
+    {
+        yield return new WaitForSeconds(2.0f);
+
+        if (playerObj != null) Destroy(playerObj);
+
+        targetPlayer = null;
+        camo = null;
+        state = State.Patrol;
+
+        if (animator != null) animator.SetBool("isFast", false);
+
+        wpIndex = GetClosestWaypointIndex();
+    }
+    public void OnEnterSafeZone(int zoneID) { activeSafeZones.Add(zoneID); CancelHunt(); }
+    public void OnExitSafeZone(int zoneID) { activeSafeZones.Remove(zoneID); }
+
+    public bool IsInSafeZone() => activeSafeZones.Count > 0;
 }

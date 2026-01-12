@@ -1,41 +1,42 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SafeZoneTrigger : MonoBehaviour
 {
-    [SerializeField] private SharkAI shark;
     [SerializeField] private string playerTag = "Player";
 
-    private void Awake()
+    private void OnTriggerEnter(Collider other)
     {
-        if (shark == null)
-            shark = FindFirstObjectByType<SharkAI>();
-    }
+        if (!IsPlayer(other, out var player)) return;
 
-    private void Reset()
-    {
-        var col = GetComponent<Collider>();
-        if (col) col.isTrigger = true;
-    }
-
-    private bool IsPlayer(Collider other, out Transform playerRoot)
-    {
-        playerRoot = other.transform.root;
-        return playerRoot.CompareTag(playerTag);
+        var allSharks = Object.FindObjectsByType<SharkAI>(FindObjectsSortMode.None);
+        foreach (var shark in allSharks)
+            shark.OnEnterSafeZone(gameObject.GetInstanceID());
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (!IsPlayer(other, out var player)) return;
 
-        Debug.Log($"[SafeZone] Player EXIT: {player.name}", this);
-        shark?.BeginHunt(player);
+        var allSharks = Object.FindObjectsByType<SharkAI>(FindObjectsSortMode.None);
+        SharkAI closestShark = null;
+        float minDistance = float.MaxValue;
+
+        foreach (var shark in allSharks)
+        {
+            shark.OnExitSafeZone(gameObject.GetInstanceID());
+
+
+            if (!shark.IsInSafeZone())
+            {
+                float d = Vector3.Distance(shark.transform.position, player.position);
+                if (d < minDistance) { minDistance = d; closestShark = shark; }
+            }
+        }
+        closestShark?.BeginHunt(player);
     }
-
-    private void OnTriggerEnter(Collider other)
+    private bool IsPlayer(Collider other, out Transform playerRoot)
     {
-        if (!IsPlayer(other, out var player)) return;
-
-        Debug.Log($"[SafeZone] Player ENTER: {player.name}", this);
-        shark?.CancelHunt();
+        playerRoot = other.transform.root;
+        return playerRoot.CompareTag(playerTag);
     }
 }
