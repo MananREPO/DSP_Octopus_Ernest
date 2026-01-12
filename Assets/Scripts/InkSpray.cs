@@ -83,7 +83,12 @@ public class InkSpray : MonoBehaviour
         }
 
         OnInkSprayed?.Invoke(pos);
-        shark?.NotifyInk(ink.transform);
+
+        var allSharks = FindObjectsByType<SharkAI>(FindObjectsSortMode.None);
+        foreach (var s in allSharks)
+        {
+            s.NotifyInk(ink.transform);
+        }
 
         Destroy(ink.gameObject, GetParticleLifetime(ink) + 0.5f);
     }
