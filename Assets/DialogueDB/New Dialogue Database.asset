@@ -261,13 +261,67 @@ MonoBehaviour:
     - title: Name
       value: Find some clams
       type: 0
-      typeString: 
+      typeString: CustomFieldType_Text
     - title: Pictures
       value: '[]'
       type: 3
       typeString: CustomFieldType_Files
     - title: Description
       value: Find some clams
+      type: 0
+      typeString: CustomFieldType_Text
+    - title: Success Description
+      value: 
+      type: 0
+      typeString: CustomFieldType_Text
+    - title: Failure Description
+      value: 
+      type: 0
+      typeString: CustomFieldType_Text
+    - title: State
+      value: unassigned
+      type: 0
+      typeString: CustomFieldType_QuestState
+    - title: Is Item
+      value: False
+      type: 2
+      typeString: CustomFieldType_Boolean
+    - title: Trackable
+      value: True
+      type: 2
+      typeString: CustomFieldType_Boolean
+    - title: Track
+      value: True
+      type: 2
+      typeString: CustomFieldType_Boolean
+    - title: Entry Count
+      value: 0
+      type: 1
+      typeString: CustomFieldType_Number
+    - title: 
+      value: 0
+      type: 1
+      typeString: CustomFieldType_Number
+    - title: 'Variable["clamsFound"]'
+      value: 3
+      type: 1
+      typeString: CustomFieldType_Number
+    - title: Variable["clamsFound"] >= 3
+      value: False
+      type: 2
+      typeString: CustomFieldType_Boolean
+  - id: 2
+    fields:
+    - title: Name
+      value: Don't let Globber catch you stealing his clams
+      type: 0
+      typeString: 
+    - title: Pictures
+      value: '[]'
+      type: 3
+      typeString: CustomFieldType_Files
+    - title: Description
+      value: Don't let Globber catch you stealing his clams
       type: 0
       typeString: 
     - title: Success Description
@@ -324,6 +378,20 @@ MonoBehaviour:
       value: 
       type: 0
       typeString: CustomFieldType_Text
+  - id: 3
+    fields:
+    - title: Name
+      value: clamsFound
+      type: 0
+      typeString: 
+    - title: Initial Value
+      value: 0
+      type: 1
+      typeString: CustomFieldType_Number
+    - title: Description
+      value: 
+      type: 0
+      typeString: 
   conversations:
   - id: 1
     fields:
@@ -820,7 +888,7 @@ MonoBehaviour:
         height: 30
     entryGroups: []
     canvasScrollPosition: {x: 0, y: 0}
-    canvasZoom: 1
+    canvasZoom: 0.97
   - id: 2
     fields:
     - title: Title
@@ -1404,8 +1472,8 @@ MonoBehaviour:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
-        x: 445.3608
-        y: 204.53607
+        x: 352.16495
+        y: 207.83502
         width: 160
         height: 30
     - id: 2
@@ -1448,14 +1516,17 @@ MonoBehaviour:
       conditionPriority: 2
       outgoingLinks: []
       conditionsString: 
-      userScript: 
+      userScript: 'SetQuestState("Find some clams", "success");
+
+        SetQuestState("Don''t
+        let Globber catch you stealing his clams", "active")'
       onExecute:
         m_PersistentCalls:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
-        x: 443.71133
-        y: 298.2474
+        x: 384.3299
+        y: 354.32986
         width: 160
         height: 30
     entryGroups: []
