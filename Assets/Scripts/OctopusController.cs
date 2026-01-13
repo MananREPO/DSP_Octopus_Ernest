@@ -137,6 +137,7 @@ public class OctopusController : MonoBehaviour
         yield return new WaitForSeconds(delay);
         movementLocked = false;
     }
+
     public void PauseGame()
     {
         isPaused = true;
