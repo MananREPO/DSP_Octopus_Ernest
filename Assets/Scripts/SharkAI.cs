@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SharkAI : MonoBehaviour
 {
-    private enum State { Patrol, Hunt, InkAttack, Eating }
+    private enum State { Patrol, Hunt, InkAttack }
 
     [Header("References")]
     [SerializeField] private SharkPath path;
@@ -40,10 +40,17 @@ public class SharkAI : MonoBehaviour
     private Vector3 inkConfusedPosition;
     private Transform rememberedPlayer;
 
-    [Header("Kill On Touch")]
-    [SerializeField] private bool killOnTouch = true;
     [SerializeField] private string playerTag = "Player";
     [SerializeField] private Animator animator;
+
+    [Header("Damage On Touch")]
+    [SerializeField] private int biteDamage = 20;
+    [SerializeField] private float biteCooldown = 2f;
+    [SerializeField] private float biteStopTime = 2f;
+    private float movementLockUntil;
+
+    private float nextBiteTime;
+    private Transform playerInMouth;
 
 
     private State state = State.Patrol;
@@ -92,7 +99,13 @@ public class SharkAI : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (rb == null || state == State.Eating) return;
+        if (rb == null) return;
+
+        if (Time.time < movementLockUntil)
+        {
+            if (animator != null) animator.SetBool("isFast", false);
+            return;
+        }
 
         if (Time.time < inkConfusedUntil)
         {
@@ -200,6 +213,8 @@ public class SharkAI : MonoBehaviour
     public void CancelHunt(bool unsubscribeCamo = true)
     {
         targetPlayer = null;
+        inkTarget = null;
+        inkTargetUntil = 0f;
 
         if (unsubscribeCamo && camo != null)
         {
@@ -217,13 +232,10 @@ public class SharkAI : MonoBehaviour
     public void NotifyInk(Transform inkCloud)
     {
         if (inkCloud == null) return;
-
         if (state != State.Hunt || targetPlayer == null) return;
 
         rememberedPlayer = targetPlayer;
-
         targetPlayer = null;
-        camo = null;
 
         inkTarget = inkCloud;
         inkTargetUntil = Time.time + inkAttackSeconds;
@@ -334,39 +346,30 @@ public class SharkAI : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!killOnTouch || state != State.Hunt) return;
+        if (state != State.Hunt) return;
 
         Transform root = other.transform.root;
         if (!root.CompareTag(playerTag)) return;
 
-        state = State.Eating;
-
-
-        if (animator != null)
-        {
-            animator.SetTrigger("Eat");
-        }
-
-
-        root.gameObject.SetActive(false);
-
-
-        StartCoroutine(FinishEating(root.gameObject));
+        playerInMouth = root;
+        TryBite(root);
     }
-
-    private IEnumerator FinishEating(GameObject playerObj)
+    private void OnTriggerStay(Collider other)
     {
-        yield return new WaitForSeconds(2.0f);
-        AudioManager.Instance?.SetChaseState(false);
-        if (playerObj != null) Destroy(playerObj);
+        if (state != State.Hunt) return;
 
-        targetPlayer = null;
-        camo = null;
-        state = State.Patrol;
+        Transform root = other.transform.root;
+        if (!root.CompareTag(playerTag)) return;
 
-        if (animator != null) animator.SetBool("isFast", false);
+        playerInMouth = root;
+        TryBite(root);
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        Transform root = other.transform.root;
+        if (!root.CompareTag(playerTag)) return;
 
-        wpIndex = GetClosestWaypointIndex();
+        if (playerInMouth == root) playerInMouth = null;
     }
 
     private void HandleCamoChanged(bool camoOn)
@@ -380,6 +383,35 @@ public class SharkAI : MonoBehaviour
         if (activeSafeZones.Count == 0 && rememberedPlayer != null)
         {
             BeginHunt(rememberedPlayer);
+        }
+    }
+
+    private void TryBite(Transform playerRoot)
+    {
+        if (Time.time < nextBiteTime) return;
+        if (playerRoot == null) return;
+
+        var camoComp = playerRoot.GetComponentInChildren<CamoOctopus>();
+        if (camoComp != null && camoComp.IsCamouflaged) return;
+
+        if (state != State.Hunt) return;
+
+        nextBiteTime = Time.time + biteCooldown;
+        movementLockUntil = Time.time + biteStopTime;
+
+        if (animator != null)
+        {
+            animator.SetTrigger("Eat");
+        }
+
+        var stats = playerRoot.GetComponentInChildren<OctopusStats>();
+        if (stats != null)
+        {
+            stats.TakeDamage(biteDamage);
+        }
+        else
+        {
+            Debug.LogWarning("SharkAI: OctopusStats not found on player, cannot apply damage.");
         }
     }
 
