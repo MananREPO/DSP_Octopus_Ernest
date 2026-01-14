@@ -15,6 +15,9 @@ public class CamoOctopus : MonoBehaviour
     private bool isCamouflaged = false;
     private bool isBusy = false;
 
+    private float camoStaminaDrainPerSecond = 12f;
+    private OctopusStats stats;
+
     private Material[] originalMaterials;
     private Color[] camoBaseColors;
 
@@ -28,6 +31,7 @@ public class CamoOctopus : MonoBehaviour
 
     void Start()
     {
+        stats = GetComponentInParent<OctopusStats>();
         targetRenderer = GetComponentInChildren<Renderer>();
 
         originalMaterials = targetRenderer.materials;
@@ -45,6 +49,18 @@ public class CamoOctopus : MonoBehaviour
         if (Input.GetKeyDown(camoKey) && !isBusy && targetRenderer != null)
         {
             StartCoroutine(CamouflageRoutine());
+        }
+
+        if (isCamouflaged && stats != null)
+        {
+            bool ok = stats.UseStamina(camoStaminaDrainPerSecond * Time.deltaTime);
+
+            if (!ok)
+            {
+                targetRenderer.materials = originalMaterials;
+                isCamouflaged = false;
+                isBusy = false;
+            }
         }
     }
 

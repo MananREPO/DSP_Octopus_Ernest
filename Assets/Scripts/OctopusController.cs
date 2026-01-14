@@ -35,7 +35,7 @@ public class OctopusController : MonoBehaviour
         rb.interpolation = RigidbodyInterpolation.Interpolate;
 
 
-        rb.constraints = RigidbodyConstraints.FreezeRotationZ;
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
         if (cameraTransform == null && Camera.main != null)
         {
@@ -101,27 +101,30 @@ public class OctopusController : MonoBehaviour
 
     IEnumerator PerformDash()
     {
-        //animator.SetTrigger("isDash");
-        animator.SetBool("isDashing", true);
-        animator.SetBool("isSwimming", false);
-        if (dashSFX != null && AudioManager.Instance != null)
+        OctopusStats stats = GetComponent<OctopusStats>();
+        if (stats != null && stats.UseStamina(25f))
         {
-            AudioManager.Instance.PlaySFX(dashSFX, 0.8f);
+            //animator.SetTrigger("isDash");
+            animator.SetBool("isDashing", true);
+            animator.SetBool("isSwimming", false);
+            if (dashSFX != null && AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySFX(dashSFX, 0.8f);
+            }
+            yield return new WaitForSeconds(0.75f);
+            isDashing = true;
+            lastDashTime = Time.time;
+            if (dashBubbles != null) dashBubbles.SetEmitting(true);
+            rb.AddForce(transform.forward * dashForce, ForceMode.Impulse);
+
+            yield return new WaitForSeconds(dashDuration);
+            if (dashBubbles != null) dashBubbles.SetEmitting(false);
+            isDashing = false;
+            yield return new WaitForSeconds(0.2f);
+            animator.SetBool("isDashing", false);
+            animator.SetBool("isSwimming", true);
+            //animator.SetTrigger("isSwim");
         }
-        yield return new WaitForSeconds(0.75f);
-        isDashing = true;
-        lastDashTime = Time.time;
-        if (dashBubbles != null) dashBubbles.SetEmitting(true);
-        rb.AddForce(transform.forward * dashForce, ForceMode.Impulse);
-
-        yield return new WaitForSeconds(dashDuration);
-        if (dashBubbles != null) dashBubbles.SetEmitting(false);
-        isDashing = false;
-        yield return new WaitForSeconds(0.2f);
-        animator.SetBool("isDashing", false);
-        animator.SetBool("isSwimming", true);
-        //animator.SetTrigger("isSwim");
-
     }
 
     void OnCollisionEnter(Collision collision)
