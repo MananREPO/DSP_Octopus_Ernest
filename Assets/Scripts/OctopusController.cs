@@ -35,7 +35,7 @@ public class OctopusController : MonoBehaviour
         rb.interpolation = RigidbodyInterpolation.Interpolate;
 
 
-        rb.constraints = RigidbodyConstraints.FreezeRotationZ;
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
         if (cameraTransform == null && Camera.main != null)
         {
