@@ -18,8 +18,15 @@ public class InkSpray : MonoBehaviour
 
     private SharkAI shark;
 
+    private OctopusStats stats;
+
     [Header("Audio")]
     [SerializeField] private AudioClip inkSFX;
+
+    private void Start()
+    {
+        stats = GetComponentInParent<OctopusStats>();
+    }
 
     private void Awake()
     {
@@ -34,63 +41,67 @@ public class InkSpray : MonoBehaviour
 
     private void ShootInkBurst()
     {
-        bool isSwimming = Input.GetKey(KeyCode.W);
-        ParticleSystem prefab = isSwimming ? swimInkPrefab : idleInkPrefab;
-
-        if (prefab == null)
+        if (stats != null && stats.UseInk(30f))
         {
-            Debug.LogWarning("InkSpray: Missing ink prefab reference.");
-            return;
+            bool isSwimming = Input.GetKey(KeyCode.W);
+            ParticleSystem prefab = isSwimming ? swimInkPrefab : idleInkPrefab;
+
+            if (prefab == null)
+            {
+                Debug.LogWarning("InkSpray: Missing ink prefab reference.");
+                return;
+            }
+
+            if (inkSFX != null && AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySFX(inkSFX, 0.9f);
+            }
+
+            Transform root = transform.root;
+            Vector3 dir = -root.forward;
+
+            Vector3 pos;
+            Quaternion rot;
+
+            if (spawnPoint != null)
+            {
+                pos = spawnPoint.position;
+                rot = spawnPoint.rotation;
+                dir = -spawnPoint.forward;
+            }
+            else
+            {
+                pos = root.position + dir * spawnForwardOffset;
+                rot = Quaternion.LookRotation(dir, Vector3.up);
+            }
+
+            ParticleSystem ink = Instantiate(prefab, pos, rot);
+
+            ink.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            ink.Play();
+
+            Rigidbody rb = ink.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.useGravity = false;
+                rb.linearVelocity = dir * launchSpeed;
+                StartCoroutine(StopPushAfter(rb, pushDuration));
+            }
+            else
+            {
+                StartCoroutine(PushTransformForward(ink.transform, dir, launchSpeed, pushDuration));
+            }
+
+            OnInkSprayed?.Invoke(pos);
+
+            var allSharks = FindObjectsByType<SharkAI>(FindObjectsSortMode.None);
+            foreach (var s in allSharks)
+            {
+                s.NotifyInk(ink.transform);
+            }
+
+            Destroy(ink.gameObject, GetParticleLifetime(ink) + 0.5f);
         }
-        if (inkSFX != null && AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlaySFX(inkSFX, 0.9f);
-        }
-
-        Transform root = transform.root;
-        Vector3 dir = -root.forward;
-
-        Vector3 pos;
-        Quaternion rot;
-
-        if (spawnPoint != null)
-        {
-            pos = spawnPoint.position;
-            rot = spawnPoint.rotation;
-            dir = -spawnPoint.forward;
-        }
-        else
-        {
-            pos = root.position + dir * spawnForwardOffset;
-            rot = Quaternion.LookRotation(dir, Vector3.up);
-        }
-
-        ParticleSystem ink = Instantiate(prefab, pos, rot);
-
-        ink.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-        ink.Play();
-
-        Rigidbody rb = ink.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.useGravity = false;
-            rb.linearVelocity = dir * launchSpeed;
-            StartCoroutine(StopPushAfter(rb, pushDuration));
-        }
-        else
-        {
-            StartCoroutine(PushTransformForward(ink.transform, dir, launchSpeed, pushDuration));
-        }
-
-        OnInkSprayed?.Invoke(pos);
-
-        var allSharks = FindObjectsByType<SharkAI>(FindObjectsSortMode.None);
-        foreach (var s in allSharks)
-        {
-            s.NotifyInk(ink.transform);
-        }
-
-        Destroy(ink.gameObject, GetParticleLifetime(ink) + 0.5f);
     }
 
     private IEnumerator StopPushAfter(Rigidbody rb, float duration)

@@ -35,7 +35,7 @@ public class SharkAI : MonoBehaviour
     [Header("Ink Reaction")]
     [SerializeField] private float inkAttackSeconds = 3.5f;
     [SerializeField] private float inkAttackReachDist = 1.2f;
-    [SerializeField] private float inkConfusedTime = 3f;
+    [SerializeField] private float inkConfusedTime = 5f;
     private float inkConfusedUntil;
     private Vector3 inkConfusedPosition;
     private Transform rememberedPlayer;
@@ -149,20 +149,17 @@ public class SharkAI : MonoBehaviour
             state = State.Patrol;
         }
 
-        bool isCamo = GetCamoState();
+        if (targetPlayer != null)
+        {
+            var camoComp = targetPlayer.GetComponentInChildren<CamoOctopus>();
+            if (camoComp != null && camoComp.IsCamouflaged)
+            {
+                CancelHunt();
+            }
+        }
 
-        if (targetPlayer != null && isCamo)
-        {
-            state = State.Patrol;
-        }
-        else if (targetPlayer != null)
-        {
-            state = State.Hunt;
-        }
-        else
-        {
-            state = State.Patrol;
-        }
+        if (targetPlayer != null) state = State.Hunt;
+        else state = State.Patrol;
 
         if (state == State.Hunt) HuntMove();
         else PatrolMove();
@@ -172,10 +169,24 @@ public class SharkAI : MonoBehaviour
     {
         if (activeSafeZones.Count > 0) return;
         if (inkTarget != null && Time.time < inkTargetUntil) return;
+
         animator.SetBool("isFast", true);
         targetPlayer = player;
+
+        var camoComp = player != null ? player.GetComponentInChildren<CamoOctopus>() : null;
+        if (camoComp != null && camoComp.IsCamouflaged)
+        {
+            CancelHunt();
+            return;
+        }
+
         rememberedPlayer = player;
         camo = player != null ? player.GetComponentInChildren<CamoOctopus>() : null;
+        if (camo != null)
+        {
+            camo.OnCamoChanged -= HandleCamoChanged;
+            camo.OnCamoChanged += HandleCamoChanged;
+        }
 
         huntStartTime = Time.time;
 
@@ -186,11 +197,17 @@ public class SharkAI : MonoBehaviour
         state = State.Hunt;
     }
 
-    public void CancelHunt()
+    public void CancelHunt(bool unsubscribeCamo = true)
     {
         targetPlayer = null;
-        camo = null;
-        animator.SetBool("isFast", false);
+
+        if (unsubscribeCamo && camo != null)
+        {
+            camo.OnCamoChanged -= HandleCamoChanged;
+            camo = null;
+        }
+
+        if (animator != null) animator.SetBool("isFast", false);
         turnSpeed = baseTurnSpeed;
         CancelInvoke(nameof(ResetTurnSpeed));
         AudioManager.Instance?.SetChaseState(false);
@@ -337,8 +354,6 @@ public class SharkAI : MonoBehaviour
         StartCoroutine(FinishEating(root.gameObject));
     }
 
-
-
     private IEnumerator FinishEating(GameObject playerObj)
     {
         yield return new WaitForSeconds(2.0f);
@@ -353,7 +368,27 @@ public class SharkAI : MonoBehaviour
 
         wpIndex = GetClosestWaypointIndex();
     }
-    public void OnEnterSafeZone(int zoneID) { activeSafeZones.Add(zoneID); CancelHunt(); }
+
+    private void HandleCamoChanged(bool camoOn)
+    {
+        if (camoOn)
+        {
+            CancelHunt(unsubscribeCamo: false);
+            return;
+        }
+
+        if (activeSafeZones.Count == 0 && rememberedPlayer != null)
+        {
+            BeginHunt(rememberedPlayer);
+        }
+    }
+
+    public void OnEnterSafeZone(int zoneID)
+    {
+        activeSafeZones.Add(zoneID);
+        CancelHunt(unsubscribeCamo: true);
+    }
+
     public void OnExitSafeZone(int zoneID) { activeSafeZones.Remove(zoneID); }
 
     public bool IsInSafeZone() => activeSafeZones.Count > 0;
