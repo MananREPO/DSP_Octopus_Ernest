@@ -1,5 +1,6 @@
 // Copyright (c) Pixel Crushers. All rights reserved.
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -278,6 +279,9 @@ namespace PixelCrushers.DialogueSystem
         public static ConversationView ConversationView { get { return conversationView; } }
         public static DialogueDebug.DebugLevel DebugLevel { get { return debugLevel; } set { debugLevel = value; } }
         public static bool AllowLuaExceptions { get { return allowLuaExceptions; } set { allowLuaExceptions = value; } }
+
+        public static Action<Transform> conversationEnded { get; set; }
+
         /// @endcond
 
         /// <summary>

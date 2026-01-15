@@ -630,11 +630,11 @@ MonoBehaviour:
     - title: Title
       value: EloiseAct1
       type: 0
-      typeString: 
+      typeString: CustomFieldType_Text
     - title: Description
       value: 
       type: 0
-      typeString: 
+      typeString: CustomFieldType_Text
     - title: Actor
       value: 1
       type: 5
@@ -1115,12 +1115,12 @@ MonoBehaviour:
       canvasRect:
         serializedVersion: 2
         x: 76.7505
-        y: 635.27423
+        y: 636.3731
         width: 160
         height: 30
     entryGroups: []
     canvasScrollPosition: {x: 0, y: 0}
-    canvasZoom: 0.8800001
+    canvasZoom: 0.7900002
   - id: 2
     fields:
     - title: Title
