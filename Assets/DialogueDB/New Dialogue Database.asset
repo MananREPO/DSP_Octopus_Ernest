@@ -316,10 +316,6 @@ MonoBehaviour:
       value: True
       type: 2
       typeString: CustomFieldType_Boolean
-    - title: Entry Count
-      value: 0
-      type: 1
-      typeString: CustomFieldType_Number
     - title: 
       value: 0
       type: 1
@@ -552,6 +548,90 @@ MonoBehaviour:
       value: False
       type: 2
       typeString: CustomFieldType_Boolean
+    - title: Trackable
+      value: True
+      type: 2
+      typeString: CustomFieldType_Boolean
+    - title: Track
+      value: True
+      type: 2
+      typeString: CustomFieldType_Boolean
+  - id: 8
+    fields:
+    - title: Name
+      value: Return to Home
+      type: 0
+      typeString: 
+    - title: Pictures
+      value: '[]'
+      type: 3
+      typeString: CustomFieldType_Files
+    - title: Description
+      value: Return to Home
+      type: 0
+      typeString: 
+    - title: Success Description
+      value: 
+      type: 0
+      typeString: 
+    - title: Failure Description
+      value: 
+      type: 0
+      typeString: 
+    - title: State
+      value: unassigned
+      type: 0
+      typeString: 
+    - title: Is Item
+      value: False
+      type: 2
+      typeString: CustomFieldType_Boolean
+    - title: Trackable
+      value: True
+      type: 2
+      typeString: CustomFieldType_Boolean
+    - title: Track
+      value: True
+      type: 2
+      typeString: CustomFieldType_Boolean
+  - id: 9
+    fields:
+    - title: Name
+      value: Find 2 more clams
+      type: 0
+      typeString: 
+    - title: Pictures
+      value: '[]'
+      type: 3
+      typeString: CustomFieldType_Files
+    - title: Description
+      value: Find 2 more clams
+      type: 0
+      typeString: 
+    - title: Success Description
+      value: 
+      type: 0
+      typeString: 
+    - title: Failure Description
+      value: 
+      type: 0
+      typeString: 
+    - title: State
+      value: unassigned
+      type: 0
+      typeString: 
+    - title: Is Item
+      value: False
+      type: 2
+      typeString: CustomFieldType_Boolean
+    - title: Trackable
+      value: True
+      type: 2
+      typeString: CustomFieldType_Boolean
+    - title: Track
+      value: True
+      type: 2
+      typeString: CustomFieldType_Boolean
   locations: []
   variables:
   - id: 1
@@ -603,7 +683,7 @@ MonoBehaviour:
       type: 0
       typeString: CustomFieldType_Text
     - title: Initial Value
-      value: True
+      value: False
       type: 2
       typeString: CustomFieldType_Boolean
     - title: Description
@@ -1661,7 +1741,7 @@ MonoBehaviour:
         height: 30
     entryGroups: []
     canvasScrollPosition: {x: 0, y: 0}
-    canvasZoom: 0.7000003
+    canvasZoom: 0.6700003
   - id: 3
     fields:
     - title: Title
@@ -2415,13 +2495,15 @@ MonoBehaviour:
       userScript: 'ShowAlert("Container opened.");
 
         SetQuestState("Open the
-        container", "success")'
+        container", "success");
+
+        SetQuestState("Try the new artefact", "success");'
       onExecute:
         m_PersistentCalls:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
-        x: 79.17525
+        x: 80.36928
         y: 722
         width: 160
         height: 30
@@ -2589,7 +2671,9 @@ MonoBehaviour:
       userScript: 'ShowAlert("Container opened.");
 
         SetQuestState("Open the
-        container", "success")'
+        container", "success");
+
+        SetQuestState("Try the new artefact", "success");'
       onExecute:
         m_PersistentCalls:
           m_Calls: []
@@ -3498,8 +3582,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 0, y: 0}
-    canvasZoom: 0.22000045
+    canvasScrollPosition: {x: 0, y: 911.5348}
+    canvasZoom: 0.52000046
   - id: 5
     fields:
     - title: Title
@@ -4143,7 +4227,9 @@ MonoBehaviour:
         value: 'SetActive(SodaCan_Blue (4),false);
 
           SetActive(PlasticBag_Damaged
-          (4),false)'
+          (4),false);
+
+          SetQuestState("Try the new artefact", "success");'
         type: 0
         typeString: 
       conversationID: 5
@@ -4549,8 +4635,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 0, y: 717.3767}
-    canvasZoom: 0.6100004
+    canvasScrollPosition: {x: 0, y: 722.0447}
+    canvasZoom: 0.8800001
   - id: 6
     fields:
     - title: Title
@@ -5436,7 +5522,7 @@ MonoBehaviour:
         isConnector: 0
         priority: 2
       conditionsString: Variable["isEloiseSafe"] == false
-      userScript: 
+      userScript: SetQuestState("Find Mom", "success")
       onExecute:
         m_PersistentCalls:
           m_Calls: []
@@ -6039,9 +6125,9 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: Sequence
-        value: 'Delay(4f);
+        value: 'Fade(out, 4);
 
-          LoadLevel(EndGameMenu);'
+          LoadLevel(EndGameMenu) @ 4;'
         type: 0
         typeString: CustomFieldType_Text
       conversationID: 7
@@ -6114,8 +6200,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 0, y: 0}
-    canvasZoom: 0.69
+    canvasScrollPosition: {x: 0, y: 65.37634}
+    canvasZoom: 0.9299998
   - id: 8
     fields:
     - title: Title
@@ -6874,7 +6960,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 31.322783, y: 33.31604}
+    canvasScrollPosition: {x: 0, y: 56.516052}
     canvasZoom: 1
   syncInfo:
     syncActors: 0

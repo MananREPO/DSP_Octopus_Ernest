@@ -101,11 +101,8 @@ public class SharkAI : MonoBehaviour
     {
         if (rb == null) return;
 
-        if (Time.time < movementLockUntil)
-        {
-            if (animator != null) animator.SetBool("isFast", false);
-            return;
-        }
+        if (Time.time < movementLockUntil) return;
+
 
         if (Time.time < inkConfusedUntil)
         {
@@ -113,69 +110,33 @@ public class SharkAI : MonoBehaviour
             return;
         }
 
-        if (inkConfusedUntil > 0f && Time.time >= inkConfusedUntil)
-        {
-            inkConfusedUntil = 0f;
-
-            if (activeSafeZones.Count == 0 && rememberedPlayer != null)
-            {
-                BeginHunt(rememberedPlayer);
-            }
-        }
 
         if (inkTarget != null && Time.time < inkTargetUntil)
         {
             state = State.InkAttack;
-
             float d = Vector3.Distance(rb.position, inkTarget.position);
-
             if (d > inkAttackReachDist)
-            {
                 MoveTowards(inkTarget.position, huntSpeed, huntUseVertical);
-            }
             else
-            {
-                inkConfusedPosition = inkTarget.position;
-                inkConfusedUntil = Time.time + inkConfusedTime;
-
-                inkTarget = null;
-                inkTargetUntil = 0f;
-
-                if (animator != null) animator.SetBool("isFast", false);
-
-                state = State.Patrol;
-            }
-
+                FinishInkAttack();
             return;
         }
 
-        if (state == State.InkAttack)
+
+        if (targetPlayer != null && GetCamoState())
         {
-            inkTarget = null;
-            inkTargetUntil = 0f;
-
-            inkConfusedPosition = rb.position;
-            inkConfusedUntil = Time.time + inkConfusedTime;
-
-            if (animator != null) animator.SetBool("isFast", false);
-
-            state = State.Patrol;
+            CancelHunt();
         }
-
         if (targetPlayer != null)
         {
-            var camoComp = targetPlayer.GetComponentInChildren<CamoOctopus>();
-            if (camoComp != null && camoComp.IsCamouflaged)
-            {
-                CancelHunt();
-            }
+            state = State.Hunt;
+            HuntMove();
         }
-
-        if (targetPlayer != null) state = State.Hunt;
-        else state = State.Patrol;
-
-        if (state == State.Hunt) HuntMove();
-        else PatrolMove();
+        else
+        {
+            state = State.Patrol;
+            PatrolMove();
+        }
     }
 
     public void BeginHunt(Transform player)
@@ -183,31 +144,23 @@ public class SharkAI : MonoBehaviour
         if (activeSafeZones.Count > 0) return;
         if (inkTarget != null && Time.time < inkTargetUntil) return;
 
-        animator.SetBool("isFast", true);
         targetPlayer = player;
-
-        var camoComp = player != null ? player.GetComponentInChildren<CamoOctopus>() : null;
-        if (camoComp != null && camoComp.IsCamouflaged)
-        {
-            CancelHunt();
-            return;
-        }
-
         rememberedPlayer = player;
         camo = player != null ? player.GetComponentInChildren<CamoOctopus>() : null;
+
         if (camo != null)
         {
             camo.OnCamoChanged -= HandleCamoChanged;
             camo.OnCamoChanged += HandleCamoChanged;
         }
 
+        animator.SetBool("isFast", true);
         huntStartTime = Time.time;
 
         turnSpeed = baseTurnSpeed * huntTurnBoost;
         CancelInvoke(nameof(ResetTurnSpeed));
         Invoke(nameof(ResetTurnSpeed), huntTurnBoostDuration);
         AudioManager.Instance?.SetChaseState(true);
-        state = State.Hunt;
     }
 
     public void CancelHunt(bool unsubscribeCamo = true)
@@ -346,8 +299,6 @@ public class SharkAI : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (state != State.Hunt) return;
-
         Transform root = other.transform.root;
         if (!root.CompareTag(playerTag)) return;
 
@@ -409,10 +360,31 @@ public class SharkAI : MonoBehaviour
         {
             stats.TakeDamage(biteDamage);
         }
-        else
+
+    }
+    private void FinishInkAttack()
+    {
+
+        inkTarget = null;
+        inkTargetUntil = 0f;
+
+
+        inkConfusedPosition = rb.position;
+        inkConfusedUntil = Time.time + inkConfusedTime;
+
+
+        if (animator != null)
         {
-            Debug.LogWarning("SharkAI: OctopusStats not found on player, cannot apply damage.");
+            animator.SetBool("isFast", false);
+
         }
+
+
+        AudioManager.Instance?.SetChaseState(false);
+
+
+        state = State.Patrol;
+
     }
 
     public void OnEnterSafeZone(int zoneID)
@@ -421,7 +393,19 @@ public class SharkAI : MonoBehaviour
         CancelHunt(unsubscribeCamo: true);
     }
 
-    public void OnExitSafeZone(int zoneID) { activeSafeZones.Remove(zoneID); }
+    public void OnExitSafeZone(int zoneID)
+    {
+        activeSafeZones.Remove(zoneID);
+
+        if (activeSafeZones.Count == 0 && rememberedPlayer != null)
+        {
+            var camoComp = rememberedPlayer.GetComponentInChildren<CamoOctopus>();
+            if (camoComp == null || !camoComp.IsCamouflaged)
+            {
+                BeginHunt(rememberedPlayer);
+            }
+        }
+    }
 
     public bool IsInSafeZone() => activeSafeZones.Count > 0;
 }
