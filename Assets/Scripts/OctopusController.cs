@@ -51,7 +51,7 @@ public class OctopusController : MonoBehaviour
 
             transform.rotation = Quaternion.Euler(camEuler.x, camEuler.y, 0f);
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 if (Time.time >= lastDashTime + dashCooldown)
                 {
