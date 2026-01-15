@@ -7,6 +7,7 @@ public class ScreenBlink : MonoBehaviour
 {
     [SerializeField] private Image fadePanel;
     [SerializeField] private TMP_Text dayText;
+    [SerializeField] private TMP_Text objectiveText;
 
     [SerializeField] private float waitBeforeBlink = 5f;
     [SerializeField] private float fadeInTime = 0.35f;
@@ -14,12 +15,15 @@ public class ScreenBlink : MonoBehaviour
     [SerializeField] private float textHoldTime = 1.2f;
     [SerializeField] private float fadeOutTime = 0.5f;
 
+    [SerializeField] private float objectiveHoldTime = 5f;
+
     private Coroutine routine;
 
     private void Awake()
     {
         SetAlpha(fadePanel, 0f);
         SetAlpha(dayText, 0f);
+        SetAlpha(objectiveText, 0f);
     }
 
     public void PlayNextDayBlink()
@@ -38,12 +42,18 @@ public class ScreenBlink : MonoBehaviour
         SetAlpha(dayText, 1f);
 
         yield return new WaitForSeconds(textHoldTime);
-
         SetAlpha(dayText, 0f);
 
         yield return new WaitForSeconds(holdBlackTime);
 
         yield return FadeImage(fadePanel, 1f, 0f, fadeOutTime);
+
+        if (objectiveText != null)
+        {
+            SetAlpha(objectiveText, 1f);
+            yield return new WaitForSeconds(objectiveHoldTime);
+            SetAlpha(objectiveText, 0f);
+        }
 
         routine = null;
     }
