@@ -5283,11 +5283,11 @@ MonoBehaviour:
     - title: Title
       value: EloiseAct3
       type: 0
-      typeString: 
+      typeString: CustomFieldType_Text
     - title: Description
       value: 
       type: 0
-      typeString: 
+      typeString: CustomFieldType_Text
     - title: Actor
       value: 1
       type: 5
@@ -5867,7 +5867,7 @@ MonoBehaviour:
         type: 0
         typeString: 
       - title: Sequence
-        value: SetActive(fishing net,false)
+        value: SetActive(fishing net,false);
         type: 0
         typeString: 
       conversationID: 7
@@ -6017,11 +6017,11 @@ MonoBehaviour:
       - title: Title
         value: 
         type: 0
-        typeString: 
+        typeString: CustomFieldType_Text
       - title: Description
         value: 
         type: 0
-        typeString: 
+        typeString: CustomFieldType_Text
       - title: Actor
         value: 1
         type: 5
@@ -6033,15 +6033,17 @@ MonoBehaviour:
       - title: Menu Text
         value: 
         type: 0
-        typeString: 
+        typeString: CustomFieldType_Text
       - title: Dialogue Text
         value: Oh, I hope not. But now we must hurry!"
         type: 0
-        typeString: 
+        typeString: CustomFieldType_Text
       - title: Sequence
-        value: 
+        value: 'Delay(4f);
+
+          LoadLevel(EndGameMenu);'
         type: 0
-        typeString: 
+        typeString: CustomFieldType_Text
       conversationID: 7
       isRoot: 0
       isGroup: 0
@@ -6113,7 +6115,7 @@ MonoBehaviour:
         height: 30
     entryGroups: []
     canvasScrollPosition: {x: 0, y: 0}
-    canvasZoom: 0.5800004
+    canvasZoom: 0.69
   - id: 8
     fields:
     - title: Title
