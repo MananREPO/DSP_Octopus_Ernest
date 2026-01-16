@@ -407,7 +407,7 @@ MonoBehaviour:
   - id: 4
     fields:
     - title: Name
-      value: Free mum's tentacle
+      value: Find something to cut the net
       type: 0
       typeString: 
     - title: Pictures
@@ -415,7 +415,7 @@ MonoBehaviour:
       type: 3
       typeString: CustomFieldType_Files
     - title: Description
-      value: Free mum's tentacle
+      value: Find something to cut the net
       type: 0
       typeString: 
     - title: Success Description
@@ -3582,8 +3582,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 0, y: 911.5348}
-    canvasZoom: 0.52000046
+    canvasScrollPosition: {x: 0, y: 26.229492}
+    canvasZoom: 0.6100004
   - id: 5
     fields:
     - title: Title
@@ -5692,8 +5692,8 @@ MonoBehaviour:
       conditionsString: 
       userScript: 'ShowAlert("Move debris with spoon as lever, free her tentacle");
 
-        SetQuestState("Free
-        mum''s tentacle", "active")'
+        SetQuestState("Find
+        something to cut the net", "active")'
       onExecute:
         m_PersistentCalls:
           m_Calls: []
@@ -5750,8 +5750,8 @@ MonoBehaviour:
         destinationDialogueID: 6
         isConnector: 0
         priority: 2
-      conditionsString: CurrentQuestState("Free mum's tentacle") == "active" and
-        (Variable["isSpoonHeld"] == true)
+      conditionsString: CurrentQuestState("Find something to cut the net") == "active"
+        and (Variable["isSpoonHeld"] == true)
       userScript: ShowAlert("Spoon Used");
       onExecute:
         m_PersistentCalls:
@@ -5971,14 +5971,14 @@ MonoBehaviour:
         isConnector: 0
         priority: 2
       conditionsString: Variable["isShellHeld"] == true
-      userScript: SetQuestState("Free mum's tentacle", "success")
+      userScript: SetQuestState("Find something to cut the net", "success")
       onExecute:
         m_PersistentCalls:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
         x: 288
-        y: 134
+        y: 134.86021
         width: 160
         height: 30
     - id: 10
@@ -6516,7 +6516,7 @@ MonoBehaviour:
       canvasRect:
         serializedVersion: 2
         x: 80
-        y: 50
+        y: 49.199997
         width: 160
         height: 30
     - id: 1
@@ -6563,7 +6563,7 @@ MonoBehaviour:
         destinationDialogueID: 2
         isConnector: 0
         priority: 2
-      conditionsString: CurrentQuestState("Free mum's tentacle") == "active"
+      conditionsString: CurrentQuestState("Find something to cut the net") == "active"
       userScript: 
       onExecute:
         m_PersistentCalls:
@@ -6960,7 +6960,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 0, y: 56.516052}
+    canvasScrollPosition: {x: 0, y: 0}
     canvasZoom: 1
   syncInfo:
     syncActors: 0
