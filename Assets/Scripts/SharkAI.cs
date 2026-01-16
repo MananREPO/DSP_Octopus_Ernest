@@ -35,7 +35,7 @@ public class SharkAI : MonoBehaviour
     [Header("Ink Reaction")]
     [SerializeField] private float inkAttackSeconds = 3.5f;
     [SerializeField] private float inkAttackReachDist = 1.2f;
-    [SerializeField] private float inkConfusedTime = 5f;
+    [SerializeField] private float inkConfusedTime = 2.5f;
     private float inkConfusedUntil;
     private Vector3 inkConfusedPosition;
     private Transform rememberedPlayer;

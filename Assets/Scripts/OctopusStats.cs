@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class OctopusStats : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class OctopusStats : MonoBehaviour
     [SerializeField] private float healthRegenDelay = 1.5f;
     [SerializeField] private float staminaRegenDelay = 0.6f;
     [SerializeField] private float inkRegenDelay = 0.8f;
+
+    private string deathMenuScene = "DeathMenu";
 
     public float Health { get; private set; }
     public float Stamina { get; private set; }
@@ -74,7 +77,10 @@ public class OctopusStats : MonoBehaviour
         Health = Mathf.Max(0f, Health - amount);
         healthRegenBlockedUntil = Time.time + healthRegenDelay;
 
-        // if (Health <= 0f) Die();
+        if (Health <= 0f)
+        {
+            SceneManager.LoadScene(deathMenuScene);
+        }
     }
 
     public void Heal(float amount)
